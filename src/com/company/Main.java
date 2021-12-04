@@ -1,7 +1,8 @@
 package com.company;
 //You need to print out the file. Good variable names. Pretty clean.
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
@@ -30,23 +31,70 @@ public class Main {
         }
     }
 
-    public static String WritingToFile() {
+    public static String WritingToFile() throws IOException {
         String bookTitle = getInput("Enter your book's name");
         int ISBN = Integer.parseInt(getInput("ISBN"));
         String Author = getInput("Enter your Author's name");
         String genre = getInput("Enter your genre type");
-        return (bookTitle + "," + ISBN +  "," + Author +  "," +  genre);
+        String info = (bookTitle + "," + ISBN + "," + Author + "," + genre);
+        FileWriter writer = new FileWriter("bookList.txt", true);
+        BufferedWriter bw = new BufferedWriter(writer);
+        writer.write(info);
+        writer.write("\n");
+        writer.close();
+        return info;
     }
 
-    public static void printStudentEmails() {
-        for (int i = 0; i < students.size(); i++) {
-            String[] studentDetails = students.get(i).split(",");
-            System.out.println(studentDetails[2]);
+    public static String ReadingFromFile() throws IOException {
+        String data = null;
+        try {
+            File myObj = new File("bookList.txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                data = myReader.nextLine();
+                System.out.println(data);
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
+        return data;
     }
 
-        public static void main (String[]args){
-            students.add(WritingToFile());
+    public static String searchingFile() throws IOException {
+        Scanner in = null;
+        try {
+            String userSearch = getInput("Enter your search");
+            File file = new File("bookList.txt");
+            in = new Scanner(file);
+            while (in.hasNext()) {
+                String line = in.nextLine();
+                if (line.contains(userSearch))
+                    System.out.println(line);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+    public static void main (String[]args) throws IOException {
+
+            //CreateFile();
+            //WritingToFile();
+            //ReadingFromFile();
+            //searchingFile();
+
         }
     }
 
