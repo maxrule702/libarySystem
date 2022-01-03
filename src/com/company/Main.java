@@ -3,17 +3,14 @@ package com.company;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
 
-
     private static File bookfile = new File("bookList.txt");
     private static File LoginCheck = new File("LoginFile.txt");
-    private static Object username = "";
+    private static Object Globalusername = "";
 
 
     public static String getInput(String prompt) {
@@ -48,6 +45,8 @@ public class Main {
                 break;
             }
             if (userinput.equals("register")) {
+                register();
+                Login();
                 break;
             }
             if (!userinput.equals("login") || (!userinput.equals("register"))) {
@@ -56,31 +55,69 @@ public class Main {
         }
     }
 
-    public static void Login(){
-        Scanner in = null;
+    public static void Login() {
+        File file = new File("LoginFile.txt");
         int check = 0;
-            try {
-                while(check !=1) {
-                    String userSearch = getInput("please enter your username");
-                    File file = new File("LoginFile.txt");
-                    in = new Scanner(file);
-                    while (in.hasNext()) {
-                        String line = in.nextLine();
-                        if (line.contains(userSearch)) {
-                            System.out.println("welcome back " + userSearch);
-                            username = userSearch;
-                            check++;
-                            break;
+       int  allLinesCheck = 0;
+        try {
+            while (check != 1) {
+                Scanner scanner = new Scanner(file);
+                int lineNum = 0;
+                String userSearch = getInput("please enter your username");
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    lineNum++;
+                    allLinesCheck++;
+                    if (line.contains(userSearch)) {
+                        System.out.println("welcome back " + userSearch);
+
+                        String passSearch = getInput("please enter your password");
+                        String passwordline = Files.readAllLines(Paths.get("LoginFile.txt")).get(lineNum);
+                       if (passSearch.equalsIgnoreCase(passwordline)){
+                           System.out.println("correct");
+                           check++;
+                           break;
                         }
-                        else{
-                            System.out.println("User not found");
+
+
+                    } else {
+                        if(allLinesCheck > lineNum){
+                            System.out.println("username or password not found");
+
                         }
                     }
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                }
             }
+        } catch (FileNotFoundException e) {
+            //handle this
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+        public static void register(){
+        String username = getInput("Enter your name");
+        String password = getInput("please enter your password");
+        File file = new File("LoginFile.txt");
+        String userName = (username);
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter("LoginFile.txt", true);
+            BufferedWriter bw = new BufferedWriter(writer);
+            writer.write(userName);
+            writer.write("\n");
+            writer.write(password);
+            writer.write("\n");
+            writer.close();
+            System.out.println("user has been successfully created welcome " + username);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
     public static String WritingToFile() throws IOException {
