@@ -1,5 +1,4 @@
 package com.company;
-//You need to print out the file. Good variable names. Pretty clean.
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -58,12 +57,12 @@ public class Main {
     public static void Login() {
         File file = new File("LoginFile.txt");
         int check = 0;
-       int  allLinesCheck = 0;
+        int allLinesCheck = 0;
         try {
             while (check != 1) {
                 Scanner scanner = new Scanner(file);
                 int lineNum = 0;
-                String userSearch = getInput("please enter your username");
+                String userSearch = getInput("please enter your username , if you see this message more than once youve enter your details incorrectly");
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     lineNum++;
@@ -73,29 +72,29 @@ public class Main {
 
                         String passSearch = getInput("please enter your password");
                         String passwordline = Files.readAllLines(Paths.get("LoginFile.txt")).get(lineNum);
-                       if (passSearch.equalsIgnoreCase(passwordline)){
-                           System.out.println("correct");
-                           check++;
-                           break;
+                        if (passSearch.equalsIgnoreCase(passwordline)) {
+                            System.out.println("correct");
+                            check++;
+                            break;
                         }
 
 
                     } else {
-                        if(allLinesCheck > lineNum){
+                        if (allLinesCheck > lineNum) {
                             System.out.println("username or password not found");
 
                         }
                     }
                 }
             }
+        mainMenu();
         } catch (FileNotFoundException e) {
-            //handle this
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-        public static void register(){
+    public static void register() {
         String username = getInput("Enter your name");
         String password = getInput("please enter your password");
         File file = new File("LoginFile.txt");
@@ -117,7 +116,6 @@ public class Main {
         }
 
     }
-
 
 
     public static String WritingToFile() throws IOException {
@@ -169,6 +167,27 @@ public class Main {
         return null;
     }
 
+    public static String mainMenu() throws IOException {
+        while (true) {
+            int MenuOptions = Integer.parseInt(getInput("what option would you like to chose 1. inputting new book 2. viewing all available books 3. searching for a specific book"));
+            if (MenuOptions == 1) {
+                WritingToFile();
+                break;
+            }
+            if (MenuOptions == 2) {
+                ReadingFromFile();
+                break;
+            }
+            if (MenuOptions == 3) {
+                searchingFile();
+                break;
+            } else {
+                System.out.println("invalid option try again");
+            }
+
+        }
+        return null;
+    }
 
 
 
